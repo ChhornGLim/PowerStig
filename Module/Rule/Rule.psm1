@@ -126,8 +126,18 @@ Class Rule : ICloneable
             The existing converted rules
     #>
     [Boolean] IsDuplicateRule ( [object] $ReferenceObject )
-    {
-        return Test-DuplicateRule -ReferenceObject $ReferenceObject -DifferenceObject $this
+    {           
+        # shose@257STIGChecklist
+        $GetDuplicateRuleIdResults = Get-DuplicateRuleId -ReferenceObject $ReferenceObject -DifferenceObject $this
+        if ($GetDuplicateRuleIdResults -ne '')
+        {
+            $this.DuplicateOf = $GetDuplicateRuleIdResults
+            return $true
+        }
+        else
+        {
+            return $false
+        }
     }
 
     <#

@@ -109,6 +109,68 @@ function Test-DuplicateRule
 
 <#
     .SYNOPSIS
+        Tests the results of ConvertTo-*Rule functions for duplicates. Some STIGs have multiple duplicates but we only
+        need to account for processing them once.  If a duplicate is detected we will convert that rule to a document rule.
+
+        This function is similar to Test-DuplicateRule except that this one returns the ID of the rule that the current rule is a 
+        duplicate of.
+
+    .PARAMETER ReffernceObject
+        The list of Stigs objects to compare to.
+
+    .PARAMETER DifferenceObject
+        The newly created object to verify is not a duplicate.
+
+    .NOTES
+        General notes
+#>
+function Get-DuplicateRuleId
+{ 
+    # shose@257STIGChecklist
+    [CmdletBinding()]
+    [OutputType([String])]
+    param
+    (
+        [Parameter( Mandatory = $true )]
+        [AllowNull()]
+        [object]
+        $ReferenceObject,
+
+        [Parameter( Mandatory = $true )]
+        [object]
+        $DifferenceObject
+    )
+
+    $ruleType = $DifferenceObject.GetType().Name
+    $baseRule = [Rule]::New()
+
+    $referenceProperties = ( $baseRule | Get-Member -MemberType Property ).Name
+    $differenceProperties = ( $DifferenceObject | Get-Member -MemberType Property ).Name
+
+    $propertyList = (Compare-Object -ReferenceObject $referenceProperties -DifferenceObject $differenceProperties).InputObject
+    $referenceRules = $ReferenceObject | Where-Object { $( $PsItem.GetType().Name ) -eq $ruletype }
+
+    foreach ( $rule in $referenceRules )
+    {
+        $results = @()
+
+        foreach ($propertyName in $PropertyList)
+        {
+            $results += $rule.$propertyName -eq $DifferenceObject.$propertyName
+        }
+
+        if ( $results -notcontains $false )
+        {
+            Write-Verbose "$($rule.Id) is a duplicate"
+            return $rule.Id
+        }
+    }
+    # If the code made it this far a duplicate does not exist and we return $false
+    return ''
+}
+
+<#
+    .SYNOPSIS
         Looks in $global:stigSettings for existing rules
 
     .NOTES

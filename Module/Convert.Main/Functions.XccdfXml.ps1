@@ -319,14 +319,16 @@ function Get-StigRuleList
 
             foreach ( $rule in $rules )
             {
+                <# shose@257STIGChecklist
                 if ( $rule.title -match 'Duplicate' -or $exclusionRuleList.Contains(($rule.id -split '\.')[0]) )
                 {
                     [void] $global:stigSettings.Add( ( [DocumentRule]::ConvertFrom( $rule ) ) )
                 }
                 else
                 {
+                    #>
                     [void] $global:stigSettings.Add( $rule )
-                }
+                #}
             }
             $stigProcessedCounter ++
         }
