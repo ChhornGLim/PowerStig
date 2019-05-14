@@ -52,7 +52,13 @@ Configuration WindowsFirewall
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         [string[]]
-        $SkipRuleType
+        $SkipRuleType,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.PowerShell.DesiredStateConfiguration.ArgumentToConfigurationDataTransformation()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     ##### BEGIN DO NOT MODIFY #####
@@ -63,4 +69,7 @@ Configuration WindowsFirewall
     Import-DscResource -ModuleName PSDscResources -ModuleVersion 2.10.0.0
     . "$resourcePath\windows.Registry.ps1"
     . "$resourcePath\windows.Script.skip.ps1"
+
+    # Generate Differential Configuration Blocks
+    . "$resourcePath\windows.Differential.ps1"
 }

@@ -153,6 +153,30 @@ Describe ($title + " $($stig.StigVersion) mof output") {
             }
         }
 
+        if ($null -ne $DifferentialConfigurationData)
+        {
+            Context 'Differential Configuration Data' {
+                It 'Should compile the MOF without throwing' {
+                    { & $technologyConfig @testParameterList -DifferentialConfigurationData $DifferentialConfigurationData } | Should -Not -Throw
+                }
+
+                $configurationDocumentPath = "$TestDrive\localhost.mof"
+                $instances = [Microsoft.PowerShell.DesiredStateConfiguration.Internal.DscClassCache]::ImportInstances($configurationDocumentPath, 4)
+                $dscMof = $instances | Where-Object -FilterScript { $PSItem.ResourceID -match "\[$($differentialManualRules)\]" }
+
+                It 'Should have two Differential Rules within compiled Mof' {
+                    $diffRuleCount = $dscMof | Measure-Object
+                    $diffRuleCount.Count | Should -Be 1
+                }
+
+                It 'Should throw attempting to compile the MOF' {
+                    $shouldThrowDiffConfigData = $DifferentialConfigurationData
+                    $shouldThrowDiffConfigData.Add('BogusRuleId', @{WindowsFeature = @{Name = 'TestFeature3' } })
+                    { & $technologyConfig @testParameterList -DifferentialConfigurationData $shouldThrowDiffConfigData } | Should -Throw
+                }
+            }
+        }
+
         $stigPath = $stig.path.TrimEnd(".xml")
         $orgSettings = $stigPath + ".org.default.xml"
 

@@ -75,7 +75,13 @@ Configuration WindowsClient
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         [string[]]
-        $SkipRuleType
+        $SkipRuleType,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.PowerShell.DesiredStateConfiguration.ArgumentToConfigurationDataTransformation()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     ##### BEGIN DO NOT MODIFY #####
@@ -106,4 +112,7 @@ Configuration WindowsClient
     . "$resourcePath\windows.Service.ps1"
     . "$resourcePath\windows.Registry.ps1"
     . "$resourcePath\windows.WindowsOptionalFeature.ps1"
+
+    # Generate Differential Configuration Blocks
+    . "$resourcePath\windows.Differential.ps1"
 }

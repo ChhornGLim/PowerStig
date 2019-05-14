@@ -82,7 +82,13 @@ Configuration WindowsServer
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         [string[]]
-        $SkipRuleType
+        $SkipRuleType,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.PowerShell.DesiredStateConfiguration.ArgumentToConfigurationDataTransformation()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     ##### BEGIN DO NOT MODIFY #####
@@ -105,9 +111,12 @@ Configuration WindowsServer
     . "$resourcePath\windows.Script.CimInstance.ps1"
     . "$resourcePath\windows.Service.ps1"
     . "$resourcePath\windows.WindowsFeature.ps1"
-    
+
     Import-DscResource -ModuleName SecurityPolicyDsc -ModuleVersion 2.4.0.0
     . "$resourcePath\windows.AccountPolicy.ps1"
     . "$resourcePath\windows.UserRightsAssignment.ps1"
     . "$resourcePath\windows.SecurityOption.ps1"
+
+    # Generate Differential Configuration Blocks
+    . "$resourcePath\windows.Differential.ps1"
 }

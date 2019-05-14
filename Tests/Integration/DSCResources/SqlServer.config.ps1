@@ -30,7 +30,11 @@ Configuration SqlServer_config
 
         [Parameter()]
         [string[]]
-        $OrgSettings
+        $OrgSettings,
+
+        [Parameter()]
+        [hashtable]
+        $DifferentialConfigurationData
 
     )
 
@@ -60,6 +64,12 @@ Configuration SqlServer_config
             if ($null -ne $SkipRuleType)
             {
                 " SkipRuleType = @($( ($SkipRuleType | ForEach-Object {"'$PSItem'"}) -join ',' ))`n"
+            })
+            $(if ($null -ne $DifferentialConfigurationData)
+            {
+                $diffConfigDataConvertToString = ConvertTo-Json -InputObject $DifferentialConfigurationData
+                $diffConfigDataConvertToString = $diffConfigDataConvertToString.Replace('{', '@{').Replace(':  ', ' = ').Replace(',','')
+                "DifferentialConfigurationData = $diffConfigDataConvertToString"
             })
         }")
         )

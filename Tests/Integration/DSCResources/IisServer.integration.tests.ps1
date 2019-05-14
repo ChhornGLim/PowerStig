@@ -30,6 +30,15 @@ try
 
         $exception = Get-Random -InputObject $powerstigXml.DISASTIG.WebConfigurationPropertyRule.Rule.id
         $exceptionMultiple = Get-Random -InputObject $powerstigXml.DISASTIG.WebConfigurationPropertyRule.Rule.id -Count 2
+        $differentialManualRules = Get-Random -InputObject $powerstigXml.DISASTIG.ManualRule.Rule.id -Count 1
+        $differentialConfigurationData = @{
+            $differentialManualRules = @{
+                WindowsFeature = @{
+                    Name   = 'TestFeature1'
+                    Ensure = 'Absent'
+                }
+            }
+        }
 
         . "$PSScriptRoot\Common.integration.ps1"
     }

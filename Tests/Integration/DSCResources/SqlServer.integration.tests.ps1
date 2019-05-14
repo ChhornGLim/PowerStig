@@ -26,6 +26,15 @@ try
 
         $exception = Get-Random -InputObject $powerstigXml.DISASTIG.SqlScriptQueryRule.Rule.id
         $exceptionMultiple = $null
+        $differentialManualRules = Get-Random -InputObject $powerstigXml.DISASTIG.ManualRule.Rule.id -Count 1
+        $differentialConfigurationData = @{
+            $differentialManualRules = @{
+                WindowsFeature = @{
+                    Name   = 'TestFeature1'
+                    Ensure = 'Absent'
+                }
+            }
+        }
 
         . "$PSScriptRoot\Common.integration.ps1"
     }

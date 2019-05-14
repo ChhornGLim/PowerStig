@@ -32,6 +32,15 @@ try
         $exception = Get-Random -InputObject ($powerstigXml.DISASTIG.WebConfigurationPropertyRule.Rule |
             Where-Object {[string]::IsNullOrEmpty($PSItem.DuplicateOf)})
         $exceptionMultiple = Get-Random -InputObject $powerstigXml.DISASTIG.WebAppPoolRule.Rule.id -Count 2
+        $differentialManualRules = Get-Random -InputObject $powerstigXml.DISASTIG.ManualRule.Rule.id -Count 1
+        $differentialConfigurationData = @{
+            $differentialManualRules = @{
+                WindowsFeature = @{
+                    Name   = 'TestFeature1'
+                    Ensure = 'Absent'
+                }
+            }
+        }
 
         . "$PSScriptRoot\Common.integration.ps1"
     }

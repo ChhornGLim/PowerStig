@@ -40,7 +40,11 @@ Configuration WindowsDnsServer_config
         [Parameter()]
         [AllowNull()]
         [string]
-        $DomainName
+        $DomainName,
+
+        [Parameter()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     Import-DscResource -ModuleName PowerStig
@@ -69,6 +73,12 @@ Configuration WindowsDnsServer_config
             if ($null -ne $SkipRuleType)
             {
                 "SkipRuleType = @($( ($SkipRuleType | ForEach-Object {"'$PSItem'"}) -join ',' ))`n"
+            })
+            $(if ($null -ne $DifferentialConfigurationData)
+            {
+                $diffConfigDataConvertToString = ConvertTo-Json -InputObject $DifferentialConfigurationData
+                $diffConfigDataConvertToString = $diffConfigDataConvertToString.Replace('{', '@{').Replace(':  ', ' = ').Replace(',','')
+                "DifferentialConfigurationData = $diffConfigDataConvertToString"
             })
         }")
         )

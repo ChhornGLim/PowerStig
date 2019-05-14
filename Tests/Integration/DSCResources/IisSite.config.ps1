@@ -40,7 +40,11 @@ Configuration IisSite_config
         [Parameter()]
         [AllowNull()]
         [string[]]
-        $WebSiteName
+        $WebSiteName,
+
+        [Parameter()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     Import-DscResource -ModuleName PowerStig
@@ -71,6 +75,12 @@ Configuration IisSite_config
                 if ($null -ne $SkipRuleType)
                 {
                     "SkipRuleType = @($( ($SkipRuleType | ForEach-Object {"'$PSItem'"}) -join ',' ))`n"
+                })
+                $(if ($null -ne $DifferentialConfigurationData)
+                {
+                    $diffConfigDataConvertToString = ConvertTo-Json -InputObject $DifferentialConfigurationData
+                    $diffConfigDataConvertToString = $diffConfigDataConvertToString.Replace('{', '@{').Replace(':  ', ' = ').Replace(',','')
+                    "DifferentialConfigurationData = $diffConfigDataConvertToString"
                 })
             }")
         )

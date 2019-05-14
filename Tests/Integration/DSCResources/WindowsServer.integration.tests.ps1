@@ -27,14 +27,23 @@ try
         }
         else
         {
-            $exception          = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id
-            $exceptionMultiple  = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id -Count 2
-            $skipRule           = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id
-            $skipRuleMultiple   = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id -Count 2
-            $skipRuleType               = "AuditPolicyRule"
-            $expectedSkipRuleTypeCount  = $powerstigXml.DISASTIG.AuditPolicyRule.ChildNodes.Count
-            $skipRuleTypeMultiple               = @('AuditPolicyRule', 'AccountPolicyRule')
-            $expectedSkipRuleTypeMultipleCount  = $powerstigXml.DISASTIG.AuditPolicyRule.ChildNodes.Count + $powerstigXml.DISASTIG.AccountPolicyRule.ChildNodes.Count
+            $exception = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id
+            $exceptionMultiple = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id -Count 2
+            $skipRule = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id
+            $skipRuleMultiple = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id -Count 2
+            $skipRuleType = "AuditPolicyRule"
+            $expectedSkipRuleTypeCount = $powerstigXml.DISASTIG.AuditPolicyRule.ChildNodes.Count
+            $skipRuleTypeMultiple = @('AuditPolicyRule', 'AccountPolicyRule')
+            $expectedSkipRuleTypeMultipleCount = $powerstigXml.DISASTIG.AuditPolicyRule.ChildNodes.Count + $powerstigXml.DISASTIG.AccountPolicyRule.ChildNodes.Count
+            $differentialManualRules = Get-Random -InputObject $powerstigXml.DISASTIG.ManualRule.Rule.id -Count 1
+            $differentialConfigurationData = @{
+                $differentialManualRules = @{
+                    WindowsFeature = @{
+                        Name   = 'TestFeature1'
+                        Ensure = 'Absent'
+                    }
+                }
+            }
         }
 
         . "$PSScriptRoot\Common.integration.ps1"

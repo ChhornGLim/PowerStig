@@ -74,7 +74,13 @@ Configuration WindowsDnsServer
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         [string[]]
-        $SkipRuleType
+        $SkipRuleType,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.PowerShell.DesiredStateConfiguration.ArgumentToConfigurationDataTransformation()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     ##### BEGIN DO NOT MODIFY #####
@@ -98,5 +104,8 @@ Configuration WindowsDnsServer
 
     Import-DscResource -ModuleName ComputerManagementDsc -ModuleVersion 6.2.0.0
     . "$resourcePath\windows.WindowsEventLog.ps1"
+
+    # Generate Differential Configuration Blocks
+    . "$resourcePath\windows.Differential.ps1"
 
 }

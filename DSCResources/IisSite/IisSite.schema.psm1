@@ -72,7 +72,13 @@ Configuration IisSite
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         [string[]]
-        $SkipRuleType
+        $SkipRuleType,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.PowerShell.DesiredStateConfiguration.ArgumentToConfigurationDataTransformation()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     ##### BEGIN DO NOT MODIFY #####
@@ -90,6 +96,9 @@ Configuration IisSite
     . "$resourcePath\windows.xIisMimeTypeMapping.ps1"
     . "$resourcePath\windows.xWebConfigProperty.ps1"
     . "$resourcePath\windows.xSslSettings.ps1"
+
+    # Generate Differential Configuration Blocks
+    . "$resourcePath\windows.Differential.ps1"
 }
 
 #endregion Composite

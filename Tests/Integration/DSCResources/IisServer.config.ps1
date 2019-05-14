@@ -35,7 +35,11 @@ Configuration IisServer_Config
         [Parameter()]
         [AllowNull()]
         [string]
-        $LogPath
+        $LogPath,
+
+        [Parameter()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     Import-DscResource -ModuleName PowerStig
@@ -62,6 +66,12 @@ Configuration IisServer_Config
             if ($null -ne $SkipRuleType)
             {
                 "SkipRuleType = @($( ($SkipRuleType | ForEach-Object {"'$PSItem'"}) -join ',' ))`n"
+            })
+            $(if ($null -ne $DifferentialConfigurationData)
+            {
+                $diffConfigDataConvertToString = ConvertTo-Json -InputObject $DifferentialConfigurationData
+                $diffConfigDataConvertToString = $diffConfigDataConvertToString.Replace('{', '@{').Replace(':  ', ' = ').Replace(',','')
+                "DifferentialConfigurationData = $diffConfigDataConvertToString"
             })
         }")
         )

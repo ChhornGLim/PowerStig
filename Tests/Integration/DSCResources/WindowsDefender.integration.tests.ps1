@@ -30,6 +30,9 @@ try
         $exception = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id
         $exceptionMultiple = Get-Random -InputObject $powerstigXml.DISASTIG.RegistryRule.Rule.id -Count 2
 
+        # Defender STIG currently has no manual rules for Differential Configurations
+        $differentialConfigurationData = $null
+
         . "$PSScriptRoot\Common.integration.ps1"
     }
     #endregion Tests

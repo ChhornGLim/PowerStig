@@ -30,7 +30,11 @@ Configuration InternetExplorer_config
 
         [Parameter()]
         [string[]]
-        $OrgSettings
+        $OrgSettings,
+
+        [Parameter()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     Import-DscResource -ModuleName PowerStig
@@ -53,6 +57,12 @@ Configuration InternetExplorer_config
             $(if ($null -ne $SkipRule)
             {
                 "SkipRule = @($( ($SkipRule | ForEach-Object {"'$PSItem'"}) -join ',' ))`n"
+            })
+            $(if ($null -ne $DifferentialConfigurationData)
+            {
+                $diffConfigDataConvertToString = ConvertTo-Json -InputObject $DifferentialConfigurationData
+                $diffConfigDataConvertToString = $diffConfigDataConvertToString.Replace('{', '@{').Replace(':  ', ' = ').Replace(',','')
+                "DifferentialConfigurationData = $diffConfigDataConvertToString"
             })
         }")
         )

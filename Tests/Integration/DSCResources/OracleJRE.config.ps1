@@ -40,7 +40,11 @@ Configuration OracleJRE_config
         [Parameter()]
         [AllowNull()]
         [string]
-        $PropertiesPath
+        $PropertiesPath,
+
+        [Parameter()]
+        [hashtable]
+        $DifferentialConfigurationData
     )
 
     Import-DscResource -ModuleName PowerStig
@@ -64,6 +68,12 @@ Configuration OracleJRE_config
             $(if ($null -ne $SkipRule)
             {
                 "SkipRule = @($( ($SkipRule | ForEach-Object {"'$PSItem'"}) -join ',' ))`n"
+            })
+            $(if ($null -ne $DifferentialConfigurationData)
+            {
+                $diffConfigDataConvertToString = ConvertTo-Json -InputObject $DifferentialConfigurationData
+                $diffConfigDataConvertToString = $diffConfigDataConvertToString.Replace('{', '@{').Replace(':  ', ' = ').Replace(',','')
+                "DifferentialConfigurationData = $diffConfigDataConvertToString"
             })
         }")
         )
